@@ -18,6 +18,9 @@ class Room(models.Model):
     updated = models.DateTimeField(auto_now=True) #auto_now=True means it will update the this variable everytime the method is called
     created = models.DateTimeField(auto_now_add=True) #auto_now_add=True: automatically update when we first save this instance
     
+    class Meta:
+        ordering = ['-updated', '-created']
+    
     def __str__(self):
         return self.name
 
