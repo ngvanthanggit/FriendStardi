@@ -3,14 +3,15 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Studee</title>
-        <meta name="description" content="">
+        <title>Studee | Login</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- <link rel="stylesheet" href=""> -->
     </head>
+    
     <body>
-        {% include 'navbar.html' %}
-
+        <a href='/'>
+            LOGO
+        </a>
+        
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -19,7 +20,15 @@
         </ul>
         {% endif %}
 
-        {% block content %}
-        {% endblock %}
+        <form method="POST" action="">
+            {% csrf_token %}
+            <label>User name</label>
+            <input type="text" name="username" placeholder="Enter Username"/>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter Password"/>
+
+            <input type="submit" value="Login"/>
+        </form>
     </body>
 </html>
