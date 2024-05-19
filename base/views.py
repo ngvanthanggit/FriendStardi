@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
 from .models import Room, Topic
 from .forms import RoomForm
@@ -14,7 +15,7 @@ def login_page(request):
         return redirect('home')
     
     if request.method == 'POST':
-        username = request.POST.get('username')
+        username = request.POST.get('username').lower()
         password = request.POST.get('password')
         
         try:
@@ -28,12 +29,28 @@ def login_page(request):
         else:
             messages.error(request, 'Incorrect password')
         
-    context = {}
+    context = {'page': "login"}
     return render(request, 'base/login_register.html', context)
 
 def logout_user(request):
     logout(request)
     return redirect('home')
+
+def registerUser(request):
+    form = UserCreationForm()
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'An error occurred during the registration!')
+    context = {'page': "register", 'form': form}
+    return render(request, 'base/login_register.html', context)
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -62,6 +79,8 @@ def create_room(request):
         if form.is_valid():
             form.save()
             return redirect('home')
+        else:
+            messages.error(request, 'An error occurred!')
             
     context = {'form': form}
     return render(request, 'base/room_form.html', context)
@@ -79,6 +98,8 @@ def update_room(request, pk):
         if form.is_valid():
             form.save()
             return redirect('home')
+        else:
+            messages.error(request, 'An error occurred!')
     
     context = {'form': form}
     
