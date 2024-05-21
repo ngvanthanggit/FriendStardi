@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
-from .models import Room, Topic
+from .models import Room, Topic, Message
 from .forms import RoomForm
 
 
@@ -68,7 +68,20 @@ def home(request):
 
 def room(request, pk):
     this_room = Room.objects.get(id=pk)
-    context = {"room": this_room}
+    room_messages = this_room.message_set.all().order_by('-created')
+    room_participants = this_room.participants.all()
+    
+    if request.method == 'POST':
+        new_message = Message.objects.create(
+            user=request.user,
+            room=this_room,
+            body=request.POST.get('new_comment')
+        )
+        if not request.user in room_participants:
+            this_room.participants.add(request.user)
+        return redirect('room', pk=this_room.id)
+    
+    context = {"room": this_room, "room_messages": room_messages, 'room_participants': room_participants}
     return render(request, 'base/room.html', context)
 
 @login_required(login_url='login')
@@ -115,6 +128,31 @@ def delete_room(request, pk):
     if request.method == 'POST':
         room.delete()
         return redirect('home')
-    context = {'room': room}
+    context = {'obj': room}
     
+    return render(request, 'base/delete.html', context)
+
+@login_required(login_url='login')
+def delete_message(request, room_id, pk):
+    del_message = Message.objects.get(id=pk)
+    
+    if del_message.user != request.user:
+        return HttpResponse('You are not allowed!')
+    
+    if request.method == 'POST':
+        del_message.delete()
+        current_room = Room.objects.get(id=room_id)
+        current_user = request.user
+        
+        # current_room.message_set().remove(del_message)
+        
+        all_room_messages = current_room.message_set.all()
+        
+        count_user_messages = all_room_messages.filter(user=current_user).count()
+        if count_user_messages == 0:
+            current_room.participants.remove(current_user)
+            
+        return redirect('room', pk=room_id)
+    
+    context = {'obj': del_message}
     return render(request, 'base/delete.html', context)
