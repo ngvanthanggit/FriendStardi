@@ -11,6 +11,10 @@
             display: grid;
             grid-template-columns: 3fr 1fr;
         }
+        .comment-form {
+            display: block;
+            margin: 20px 0px 50px 10px;
+        }
     </style>
 
     <div class="room-container">
@@ -18,7 +22,10 @@
             <h3> Conversation </h3>
             <hr>
             {% for message in room_messages %}
-            <span> @{{message.user}}  {{message.created|timesince}} ago </span>
+            <span> 
+                <a href="{% url 'profile' message.user.username %}">@{{message.user}}</a>  
+                {{message.created|timesince}} ago 
+            </span>
 
             {% if request.user == message.user %}
             <a href="{% url 'delete-message' room.id message.id %}"> Delete </a>
@@ -32,7 +39,8 @@
             <div class="comment-form">
                 <form method="POST" action="">
                     {% csrf_token %}
-                    <input type="text" name="new_comment" placeholder="Write your message here..."/>
+                    <input type="text" name="new_comment" placeholder="Write your message here..."/
+                     style="width: 50%; height: 40px;">
                 </form>
             </div>
         </div>
@@ -41,7 +49,10 @@
             <h3> Participants </h3>
             <hr>
             {% for participant in room_participants %}
-            <p>@{{participant.username}}</p>
+            <a href="{% url 'profile' participant.username %}">
+                @{{participant.username}}
+            </a>
+            <br>
             {% endfor %}
         </div>
     </div>
