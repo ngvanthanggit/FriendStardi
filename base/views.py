@@ -99,7 +99,10 @@ def create_room(request):
     if request.method == 'POST':
         form = RoomForm(request.POST)
         if form.is_valid():
-            form.save()
+            room = form.save(commit=False)
+            room.host = request.user
+            room.save()
+            room.participants.add(room.host)
             return redirect('home')
         else:
             messages.error(request, 'An error occurred!')
