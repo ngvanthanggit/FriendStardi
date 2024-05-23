@@ -1,0 +1,10 @@
+{% for message in recent_messages %}
+<div class="message-wrapper">
+    <small> 
+        @<a href="{% url 'profile' message.user.username %}">{{message.user}}</a> 
+        {{message.created|timesince}} ago 
+    </small>
+    <p> replied to "{{message.room}}" </p>
+    <a href="{% url 'room_comment' message.room.id message.id %}" style="font-weight:bold"> {{message}} </a>
+</div>
+{% endfor %}

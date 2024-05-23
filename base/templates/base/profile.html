@@ -1,12 +1,11 @@
 {% extends 'main.html' %}
 
 {% block content %}
-
-<h1> This is Home page </h1>
-<hr>
-
 <style>
-    .home-container {
+    .profile-info {
+        text-align: center;
+    }
+    .profile-container {
         display: grid;
         grid-template-columns: 1fr 3fr 1fr;
     }
@@ -18,29 +17,22 @@
     }
 </style>
 
-<div class="home-container">
+<div class="profile-container">
     <div>
-        <h3>Browse Topics</h3>
-        <hr>
         {% include 'base/topics_component.html' %}
     </div>
-
     <div>
-        <h3> Room </h3>
-        <hr>
-        <h5> {{room_count}} room(s) available </h5>
-        <a href="{% url 'create-room' %}"> Create Room </a>
-        <div>
-            {% include 'base/feed_component.html' %}
+        <div class="profile-info">
+            <a href=""> Avatar </a>
+            <p> {{user.first_name}} {{user.last_name}} </p>
+            <p> @{{user.username}} <p>
         </div>
+
+        {% include 'base/feed_component.html' %}
     </div>
-    
     <div>
-        <h3> Recent Activity </h3>
-        <hr>
         {% include 'base/activity_component.html' %}
     </div>
-
 </div>
 
 {% endblock %}

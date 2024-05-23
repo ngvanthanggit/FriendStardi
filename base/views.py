@@ -63,14 +63,17 @@ def home(request):
     room_count = rooms.count()
     topics = Topic.objects.all()
     
-    recent_activities = Message.objects.all()[:3]
+    recent_messages = Message.objects.filter(
+        Q(user__username__icontains=q) |
+        Q(room__name__icontains=q) |
+        Q(body__icontains=q))[:3]
     
-    context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'recent_activities': recent_activities}
+    context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'recent_messages': recent_messages}
     return render(request, 'base/home.html', context)
 
 def room(request, pk, comment_id=0):
     this_room = Room.objects.get(id=pk)
-    room_messages = this_room.message_set.all().order_by('-created')
+    room_messages = this_room.message_set.all()
     room_participants = this_room.participants.all()
     
     if request.method == 'POST':
@@ -162,3 +165,12 @@ def delete_message(request, room_id, pk):
     
     context = {'obj': del_message}
     return render(request, 'base/delete.html', context)
+
+def profile(request, username):
+    user = User.objects.get(username=username)
+    
+    user_messages = user.message_set.all()
+    rooms = user.room_set.all()
+    
+    context = {"user": user, "rooms": rooms, "recent_messages": user_messages}
+    return render(request, 'base/profile.html', context)
