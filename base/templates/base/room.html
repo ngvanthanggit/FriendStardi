@@ -14,7 +14,7 @@
     </style>
 
     <div class="room-container">
-        <div class="comment-wrapper">
+        <div class="comment-wrapper" id="comment-section">
             <h3> Conversation </h3>
             <hr>
             {% for message in room_messages %}
@@ -45,6 +45,17 @@
             {% endfor %}
         </div>
     </div>
+    {% comment %} <button type="button" onclick="navigate_to('comment-section')"> go to comment section </button> {% endcomment %}
+
+    {% if all_messages == 0 %}
+    <a href="{% url 'room' room.id %}"> Show full conversations </a>
+    {% endif %}
+
+    <script>
+        function navigate_to(section_id) {
+            document.getElementById(section_id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
 </body>
 
 {% endblock %}

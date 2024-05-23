@@ -9,6 +9,13 @@
         <!-- <link rel="stylesheet" href=""> -->
     </head>
     <body>
+        <style>
+            footer {
+                display: block;
+                text-align: center;
+                margin: 50px;
+            }
+        </style>
         {% include 'navbar.html' %}
 
         {% if messages %}
@@ -21,5 +28,37 @@
 
         {% block content %}
         {% endblock %}
+
+        <hr>
+        <footer> 
+            <a href="{% url 'home' %}"> Studee </a>
+            <span> 
+                (c) Copyright 2024-<span id="current-year"></span> by 
+                <a id="web-owner" href="https://github.com/ngvanthanggit">
+                    Nguyen Van Thang
+                </a>
+            </span>    
+        </footer>
+        
+        <script>
+            const current_year = new Date().getFullYear();
+            document.getElementById('current-year').textContent = current_year;
+
+            //addEventListenter('DOMContentLoaded') to ensure that the DOM is fully loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                const web_owner_link = document.getElementById('web-owner');
+                web_owner_link.addEventListener('click', function(event) {
+                    //prevent the default action of the link
+                    event.preventDefault();
+
+                    //get the url of the element
+                    const redirect_url = web_owner_link.getAttribute('href');
+
+                    //open a new tab by window.open()
+                    //_blank means opening in another tab
+                    window.open(redirect_url, '_blank');
+                });
+            });
+        </script>
     </body>
 </html>

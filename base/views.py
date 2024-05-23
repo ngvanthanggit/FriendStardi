@@ -63,10 +63,12 @@ def home(request):
     room_count = rooms.count()
     topics = Topic.objects.all()
     
-    context = {'rooms': rooms, 'topics': topics, 'room_count': room_count}
+    recent_activities = Message.objects.all()[:3]
+    
+    context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'recent_activities': recent_activities}
     return render(request, 'base/home.html', context)
 
-def room(request, pk):
+def room(request, pk, comment_id=0):
     this_room = Room.objects.get(id=pk)
     room_messages = this_room.message_set.all().order_by('-created')
     room_participants = this_room.participants.all()
@@ -81,7 +83,11 @@ def room(request, pk):
             this_room.participants.add(request.user)
         return redirect('room', pk=this_room.id)
     
-    context = {"room": this_room, "room_messages": room_messages, 'room_participants': room_participants}
+    if comment_id:
+        room_messages = [it_message for it_message in room_messages if it_message.id == comment_id]
+    all_messages = (comment_id == 0)
+    
+    context = {"room": this_room, "room_messages": room_messages, "all_messages": all_messages, 'room_participants': room_participants}
     return render(request, 'base/room.html', context)
 
 @login_required(login_url='login')
