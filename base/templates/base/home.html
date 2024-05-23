@@ -8,7 +8,13 @@
 <style>
     .home-container {
         display: grid;
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: 1fr 3fr 1fr;
+    }
+    .activity-wrapper {
+        display: block;
+        margin: 10px 0px;
+        padding: 5px;
+        border: 1px solid;
     }
 </style>
 
@@ -30,6 +36,8 @@
     </div>
 
     <div>
+        <h3> Room </h3>
+        <hr>
         <h5> {{room_count}} room(s) available </h5>
         <a href="{% url 'create-room' %}"> Create Room </a>
         <div>
@@ -50,6 +58,18 @@
             {% endfor %}
     
         </div>
+    </div>
+    
+    <div>
+        <h3> Recent Activities </h3>
+        <hr>
+        {% for activity in recent_activities %}
+        <div class="activity-wrapper">
+            <small> @{{activity.user}} {{activity.created|timesince}} ago </small>
+            <p> replied to "{{activity.room}}" </p>
+            <a href="{% url 'room_comment' activity.room.id activity.id %}" style="font-weight:bold"> {{activity}} </a>
+        </div>
+        {% endfor %}
     </div>
 
 </div>
