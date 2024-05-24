@@ -175,5 +175,12 @@ def profile(request, username):
     user_messages = user.message_set.all()
     rooms = user.room_set.all()
     
-    context = {"user": user, "rooms": rooms, "recent_messages": user_messages}
+    topics = Topic.objects.all()
+    
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    rooms = rooms.filter(
+        Q(topic__name__icontains=q)
+    )
+    
+    context = {"user": user, "topics": topics, "rooms": rooms, "recent_messages": user_messages}
     return render(request, 'base/profile.html', context)
