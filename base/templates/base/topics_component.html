@@ -1,10 +1,26 @@
 <div> 
-    <a href="{% url 'home' %}"> All </a>
+    <a href="" id="all-topics-section"> All </a>
 </div>
 <div>
     {% for topic in topics %}
         <div>
-            <a href="{% url 'home' %}?q={{topic.name}}"> {{topic.name}} </a>
+            <a href="?q={{topic.name}}"> {{topic.name}} </a>
         </div>
     {% endfor %}
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const all_topics_section = document.getElementById('all-topics-section');
+        all_topics_section.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const current_url = window.location.href;
+            var url = new URL(current_url);
+
+            url.searchParams.delete('q')
+            
+            window.location.href = url
+        })
+    })
+</script>

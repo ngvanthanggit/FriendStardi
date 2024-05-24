@@ -53,11 +53,11 @@
                     event.preventDefault();
 
                     //get the url of the element
-                    const redirect_url = web_owner_link.getAttribute('href');
+                    const new_url = web_owner_link.getAttribute('href');
 
                     //open a new tab by window.open()
                     //_blank means opening in another tab
-                    window.open(redirect_url, '_blank');
+                    window.open(new_url, '_blank');
                 });
             });
         </script>
