@@ -403,21 +403,23 @@ a {
 
 .layout > .container {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: center;
 }
 
 .layout--3 > .container > div:first-child {
   flex-basis: 18%;
   max-width: 22.5rem;
+  margin: 0px 20px;
 }
 
 .layout--3 > .container > div:nth-child(2) {
   flex-basis: 50%;
+  margin: 0px 20px;
 }
 
 .layout--3 > .container > div:last-child {
   flex-basis: 25%;
+  margin: 0px 20px;
 }
 
 .layout--2 > .container > div:first-child {
@@ -433,24 +435,19 @@ a {
   width: 90%;
   max-width: 48rem;
   min-height: 40rem;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -46%);
   background-color: var(--color-dark);
   border-radius: 1rem;
   box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  margin: 20px 0px;
 }
 
 .layout__boxHeader {
-  display: flex;
   padding: 1.5rem;
   background-color: var(--color-dark-light);
 }
 
 .layout__boxTitle {
-  display: flex;
   gap: 1.5rem;
   align-items: center;
 }
@@ -1170,4 +1167,11 @@ a {
   font-weight: 500;
   color: var(--color-main);
   font-weight: 1.4rem;
+}
+
+.footer {
+  text-align: center;
+  padding: 10px;
+  position: relative; /* Ensure it's part of the normal flow */
+  width: 100%;
 }
