@@ -1,65 +1,40 @@
 <!DOCTYPE html>
 {% load static %}
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Studee</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" media="screen" href="{% static 'styles/main.css' %}">
-    </head>
-    <body>
-        <style>
-            footer {
-                display: block;
-                text-align: center;
-                margin: 50px;
-            }
-        </style>
-        {% include 'navbar.html' %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}" />
+    <title>StudyBuddy - Find study partners around the world!</title>
+  </head>
 
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li {% if message.tags %} class="{{message.tags}}" {% endif %}> {{message}} </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+  <body>
+    {% include 'navbar.html' %}
 
-        {% block content %}
-        {% endblock %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li {% if message.tags %} class="{{message.tags}}" {% endif %}> {{message}} </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 
-        <hr>
-        <footer> 
-            <a href="{% url 'home' %}"> Studee </a>
-            <span> 
-                (c) Copyright 2024-<span id="current-year"></span> by 
-                <a id="web-owner" href="https://github.com/ngvanthanggit">
-                    Nguyen Van Thang
-                </a>
-            </span>    
-        </footer>
-        
-        <script>
-            const current_year = new Date().getFullYear();
-            document.getElementById('current-year').textContent = current_year;
+    {% block content %}
+    {% endblock %}
 
-            //addEventListenter('DOMContentLoaded') to ensure that the DOM is fully loaded
-            document.addEventListener('DOMContentLoaded', function() {
-                const web_owner_link = document.getElementById('web-owner');
-                web_owner_link.addEventListener('click', function(event) {
-                    //prevent the default action of the link
-                    event.preventDefault();
-
-                    //get the url of the element
-                    const new_url = web_owner_link.getAttribute('href');
-
-                    //open a new tab by window.open()
-                    //_blank means opening in another tab
-                    window.open(new_url, '_blank');
-                });
-            });
-        </script>
-    </body>
+    <hr>
+    <footer> 
+        <a href="{% url 'home' %}"> FriendStardi </a>
+        <span> 
+            (c) Copyright 2024-<span id="current-year"></span> by 
+            <a id="web-owner" href="https://github.com/ngvanthanggit">
+                Nguyen Van Thang
+            </a>
+        </span>    
+    </footer>
+    
+    <script src="{% static 'js/script.js' %}"></script>
+  </body>
 </html>
