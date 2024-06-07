@@ -1,2 +1,2 @@
-# Studee
+# FriendStardi
 Study Platform
