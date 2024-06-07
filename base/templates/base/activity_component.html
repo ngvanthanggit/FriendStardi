@@ -9,9 +9,9 @@
                 <div class="avatar avatar--small">
                     <img src="https://randomuser.me/api/portraits/women/11.jpg" />
                 </div>
-                <p>
+                <p style="text-align: left;">
                     <a href="{% url 'profile' message.user.username %}">@{{message.user.username}}</a>
-                    <span>{{message.created|timesince}} days ago</span>
+                    <span>{{message.created|timesince}} ago</span>
                 </p>
             </a>
             <div class="roomListRoom__actions">

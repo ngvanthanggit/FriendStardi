@@ -910,11 +910,12 @@ a {
   border-radius: 0.7rem;
   overflow: hidden;
   position: relative;
+  margin: 0px 20px
 }
 
 @media screen and (max-width: 900px) {
   .participants {
-    display: none;
+    display: flex;
   }
 
   .layout--2 > .container > div:first-child {
