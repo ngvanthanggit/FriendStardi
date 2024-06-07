@@ -8,23 +8,44 @@
     }
 </style>
 
-<div class="profile-info">
-    <a href=""> Avatar </a>
-    <p> {{user.first_name}} {{user.last_name}} </p>
-    <p> @{{user.username}} <p>
-</div>
-
-<main class="layout layout--3">
+<main class="profile-page layout layout--3">
     <div class="container">
-        <div class="topics">
-            {% include 'base/topics_component.html' %}
+    <!-- Topics Start -->
+    <div class="topics">
+        {% include 'base/topics_component.html' %}
+    </div>
+    <!-- Topics End -->
+
+    <!-- Room List Start -->
+    <div class="roomList">
+        <div class="profile">
+            <div class="profile__avatar">
+                <div class="avatar avatar--large active">
+                    <img src="https://randomuser.me/api/portraits/men/11.jpg" />
+                </div>
+            </div>
+        <div class="profile__info">
+            <h3>{{user.first_name}} {{user.last_name}}</h3>
+            <p>@{{user.username}}</p>
+            <a href="edit-user.html" class="btn btn--main btn--pill">Edit Profile</a>
         </div>
-        <div class="roomList">
-            {% include 'base/feed_component.html' %}
+        <div class="profile__about">
+            <h3>About</h3>
+            <p>
+            l'amore dice ciao
+            </p>
         </div>
-        <div class="activities">
-            {% include 'base/activity_component.html' %}
         </div>
+
+        {% include 'base/feed_component.html' %}
+    </div>
+    <!-- Room List End -->
+
+    <!-- Activities Start -->
+    <div class="activities">
+        {% include 'base/activity_component.html' %}
+    </div>
+    <!-- Activities End -->
     </div>
 </main>
 

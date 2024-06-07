@@ -87,3 +87,8 @@ document.addEventListener('DOMContentLoaded', function() {
         window.open(new_url, '_blank');
     });
 });
+
+// comment section in room
+function navigate_to(section_id) {
+  document.getElementById(section_id).scrollIntoView({ behavior: 'smooth' });
+}

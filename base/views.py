@@ -30,7 +30,7 @@ def login_page(request):
             messages.error(request, 'Incorrect password')
         
     context = {'page': "login"}
-    return render(request, 'base/login_register.html', context)
+    return render(request, 'base/login.html', context)
 
 def logout_user(request):
     logout(request)
@@ -39,18 +39,33 @@ def logout_user(request):
 def registerUser(request):
     form = UserCreationForm()
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.username = user.username.lower()
-            user.save()
+        if request.POST.get('password') == request.POST.get('confirm_password'):
             
-            login(request, user)
-            return redirect('home')
+            if User.objects.filter(username=request.POST.get('username')).exists():
+                messages.error(request, 'Username has already existed')
+            else:
+                user = User.objects.create_user(
+                    first_name = request.POST.get('first_name'),
+                    last_name = request.POST.get('last_name'),
+                    username = request.POST.get('username'),
+                    password = request.POST.get('password')
+                )
+                user.save()
+                login(request, user)
+                return redirect('home')
         else:
-            messages.error(request, 'An error occurred during the registration!')
+            messages.error(request, 'Your password and confirm password are not the same!')
+        # if form.is_valid():
+        #     user = form.save(commit=False)
+        #     user.username = user.username.lower()
+        #     user.save()
+            
+        #     login(request, user)
+        #     return redirect('home')
+        # else:
+        #     messages.error(request, 'An error occurred during the registration!')
     context = {'page': "register", 'form': form}
-    return render(request, 'base/login_register.html', context)
+    return render(request, 'base/signup.html', context)
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -76,6 +91,8 @@ def room(request, pk, comment_id=0):
     room_messages = this_room.message_set.all()
     room_participants = this_room.participants.all()
     
+    #print(room_participants);
+    
     if request.method == 'POST':
         new_message = Message.objects.create(
             user=request.user,
@@ -96,37 +113,51 @@ def room(request, pk, comment_id=0):
 @login_required(login_url='login')
 def create_room(request):
     form = RoomForm()
+    topics = Topic.objects.all()
     if request.method == 'POST':
-        form = RoomForm(request.POST)
-        if form.is_valid():
-            room = form.save(commit=False)
-            room.host = request.user
-            room.save()
-            room.participants.add(room.host)
-            return redirect('home')
-        else:
-            messages.error(request, 'An error occurred!')
+        topic_name = request.POST.get('topic')
+        topic, created = Topic.objects.get_or_create(name=topic_name)
+        
+        Room.objects.create(
+            host = request.user,
+            topic = topic,
+            name = request.POST.get('name'),
+            description = request.POST.get('description'),
+        )
+        return redirect('home')
+        # form = RoomForm(request.POST)
+        # if form.is_valid():
+        #     room = form.save(commit=False)
+        #     room.host = request.user
+        #     room.save()
+        #     room.participants.add(room.host)
+        #     return redirect('home')
+        # else:
+        #     messages.error(request, 'An error occurred!')
             
-    context = {'form': form}
+    context = {'form': form, 'topics': topics}
     return render(request, 'base/room_form.html', context)
 
 @login_required(login_url='login')
 def update_room(request, pk):
     room = Room.objects.get(id=pk)
     form = RoomForm(instance=room)
+    topics = Topic.objects.all()
     
     if request.user != room.host:
         return HttpResponse('You are not allowed here!')
     
     if request.method == 'POST':
-        form = RoomForm(request.POST, instance=room)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-        else:
-            messages.error(request, 'An error occurred!')
+        topic_name = request.POST.get('topic')
+        topic, created = Topic.objects.get_or_create(name=topic_name)
+        
+        room.name = request.POST.get('name')
+        room.topic = topic
+        room.description = request.POST.get('description')
+        room.save()
+        return redirect('home')
     
-    context = {'form': form}
+    context = {'form': form, 'topics': topics, 'room': room}
     
     return render(request, 'base/room_form.html', context)
 
