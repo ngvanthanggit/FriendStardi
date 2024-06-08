@@ -443,11 +443,13 @@ a {
 }
 
 .layout__boxHeader {
+  display: flex;
   padding: 1.5rem;
   background-color: var(--color-dark-light);
 }
 
 .layout__boxTitle {
+  display: flex;
   gap: 1.5rem;
   align-items: center;
 }
@@ -915,7 +917,7 @@ a {
 
 @media screen and (max-width: 900px) {
   .participants {
-    display: flex;
+    display: none;
   }
 
   .layout--2 > .container > div:first-child {
@@ -1175,4 +1177,14 @@ a {
   padding: 10px;
   position: relative; /* Ensure it's part of the normal flow */
   width: 100%;
+}
+
+.edit-user .layout {
+  margin-top: 2.4rem;
+}
+
+.edit-user .layout > .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

@@ -1,0 +1,67 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<main>
+    <div class="edit-user layout">
+        <div class="container">
+            <div class="layout__box">
+                <div class="layout__boxHeader">
+                    <div class="layout__boxTitle">
+                        <h3> Edit Profile </h3>
+                    </div>
+                </div>
+                <div class="layout__body">
+                    <form class="form" method="POST" action="">
+                        {% csrf_token %}
+                        <div class="form__group">
+                            <label for="avatar"> Change Avatar </label>
+                            <input type="file" id="avatar" name="avatar" >
+                        </div>
+                        <div class="form__group">
+                            <label for="firstname"> First Name </label>
+                            <input type="text" id="firstname" name="firstname" value="{{user.first_name}}">
+                        </div>
+                        <div class="form__group">
+                            <label for="lastname"> Last Name </label>
+                            <input type="text" id="lastname" name="lastname" value="{{user.last_name}}">
+                        </div>
+                        <div class="form__group">
+                            <label for="email"> Email </label>
+                            <input type="text" id="email" name="email" placeholder="e.g. abc@gmail.com">
+                        </div>
+                        <div class="form__group">
+                            <label for="bio"> Bio </label>
+                            <textarea id="bio" name="bio" placeholder="e.g. make my profile look good"></textarea>
+                        </div>
+
+                        <div class="form__action">
+                            <a class="btn btn--dark" href="{% url 'profile' user.username %}">Cancel</a>
+
+                            <button class="btn btn--main" type="submit">
+                                <svg
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="32"
+                                height="32"
+                                viewBox="0 0 32 32"
+                                >
+                                    <title>submit</title>
+                                    <path
+                                        stroke="green"
+                                        stroke-with="20"
+                                        fill="none"
+                                        d="M25 6L6 25l-6-10"
+                                    ></path>
+                                </svg>
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

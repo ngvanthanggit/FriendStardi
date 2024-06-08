@@ -5,7 +5,7 @@ from django.http import HttpResponse, Http404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from django.db.models import Q
+from django.db.models import Q, Count
 from .models import Room, Topic, Message
 from .forms import RoomForm
 
@@ -76,12 +76,12 @@ def home(request):
         Q(host__username__icontains=q)
     )
     room_count = rooms.count()
-    topics = Topic.objects.all()
+    topics = Topic.objects.annotate(num_rooms=Count('room')).order_by('-num_rooms')[:5]
     
     recent_messages = Message.objects.filter(
         Q(user__username__icontains=q) |
         Q(room__name__icontains=q) |
-        Q(body__icontains=q))[:3]
+        Q(body__icontains=q)).order_by('-updated')[:3]
     
     context = {'rooms': rooms, 'topics': topics, 'room_count': room_count, 'recent_messages': recent_messages}
     return render(request, 'base/home.html', context)
@@ -215,3 +215,39 @@ def profile(request, username):
     
     context = {"user": user, "topics": topics, "rooms": rooms, "recent_messages": user_messages}
     return render(request, 'base/profile.html', context)
+
+@login_required(login_url='login')
+def edit_user(request):
+    
+    if request.method == "POST":
+        user = request.user
+        
+        #new_avatar = request.POST.get('avatar')
+        new_first_name = request.POST.get('firstname')
+        new_last_name = request.POST.get('lastname')
+        #new_email = request.POST.get('email')
+        #new_bio = request.POST.get('bio')
+        
+        user.first_name = new_first_name
+        user.last_name = new_last_name
+        user.save()
+        
+        return redirect('profile', username=user.username)
+    
+    context = {'user': request.user}
+    return render(request, 'base/edit_user.html', context)
+
+def topic_page(request):
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    topics = Topic.objects.annotate(num_rooms=Count('room')).order_by('-num_rooms').filter(
+        Q(name__icontains=q)
+    )
+    
+    context = {'topics': topics}
+    
+    return render(request, 'base/topics.html', context)
+
+def activities_page(request):
+    recent_messages = Message.objects.all().order_by('-updated')[:7]
+    context = {'recent_messages': recent_messages}
+    return render(request, 'base/activities.html', context)
