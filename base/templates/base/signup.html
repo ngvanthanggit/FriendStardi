@@ -17,12 +17,14 @@
                 <form class="form" method="POST" action="">
                     {% csrf_token %}
 
+                    {% for field in user_form %}
                     <div class="form__group form__group">
-                        <label for="firstname">First/Given Name</label>
-                        <input id="firstname" name="first_name" type="text" placeholder="e.g. Van Thang" />
+                        <label> {{field.label}} </label>
+                        {{field}}
                     </div>
+                    {% endfor %}
 
-                    <div class="form__group form__group">
+                    {% comment %} <div class="form__group form__group">
                         <label for="lastname">Last/Family Name</label>
                         <input id="lastname" name="last_name" type="text" placeholder="e.g. Nguyen" />
                     </div>
@@ -50,7 +52,7 @@
                         type="password"
                         placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
                         />
-                    </div>
+                    </div> {% endcomment %}
             
                     <button class="btn btn--main" type="submit">
                         <svg

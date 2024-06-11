@@ -2,12 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q, Count
-from .models import Room, Topic, Message
-from .forms import RoomForm
+from .models import Room, Topic, Message, User
+from .forms import RoomForm, UserForm, MyUserCreationForm
 
 
 def login_page(request):
@@ -36,20 +34,28 @@ def logout_user(request):
     logout(request)
     return redirect('home')
 
+
 def registerUser(request):
-    form = UserCreationForm()
+    form = MyUserCreationForm()
     if request.method == 'POST':
-        if request.POST.get('password') == request.POST.get('confirm_password'):
+        if request.POST.get('password1') == request.POST.get('password2'):
             
-            if User.objects.filter(username=request.POST.get('username')).exists():
-                messages.error(request, 'Username has already existed')
-            else:
-                user = User.objects.create_user(
-                    first_name = request.POST.get('first_name'),
-                    last_name = request.POST.get('last_name'),
-                    username = request.POST.get('username'),
-                    password = request.POST.get('password')
-                )
+            # if User.objects.filter(username=request.POST.get('username')).exists():
+            #     messages.error(request, 'Username has already existed')
+            # else:
+            #     user = User.objects.create_user(
+            #         first_name = request.POST.get('first_name'),
+            #         last_name = request.POST.get('last_name'),
+            #         username = request.POST.get('username'),
+            #         password = request.POST.get('password')
+            #     )
+            #     user.save()
+            #     login(request, user)
+            #     return redirect('home')
+            form = MyUserCreationForm(request.POST)
+            if form.is_valid():
+                user = form.save(commit=False)
+                user.username = user.username.lower()
                 user.save()
                 login(request, user)
                 return redirect('home')
@@ -64,7 +70,8 @@ def registerUser(request):
         #     return redirect('home')
         # else:
         #     messages.error(request, 'An error occurred during the registration!')
-    context = {'page': "register", 'form': form}
+    context = {'page': "register", 'user_form': form}
+    print(form)
     return render(request, 'base/signup.html', context)
 
 def home(request):
@@ -218,23 +225,18 @@ def profile(request, username):
 
 @login_required(login_url='login')
 def edit_user(request):
+    user = request.user
+    form = UserForm(instance=user)
     
     if request.method == "POST":
-        user = request.user
-        
-        #new_avatar = request.POST.get('avatar')
-        new_first_name = request.POST.get('firstname')
-        new_last_name = request.POST.get('lastname')
-        #new_email = request.POST.get('email')
-        #new_bio = request.POST.get('bio')
-        
-        user.first_name = new_first_name
-        user.last_name = new_last_name
-        user.save()
+        form = UserForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile', username=user.username)
         
         return redirect('profile', username=user.username)
     
-    context = {'user': request.user}
+    context = {'user': user, 'form': form}
     return render(request, 'base/edit_user.html', context)
 
 def topic_page(request):
