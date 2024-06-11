@@ -14,7 +14,7 @@
                 <div class="layout__body">
                     <form class="form" method="POST" action="" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <div class="form__group">
+                        {% comment %} <div class="form__group">
                             <label for="avatar"> Change Avatar </label>
                             <input type="file" id="avatar" name="avatar" >
                         </div>
@@ -28,12 +28,19 @@
                         </div>
                         <div class="form__group">
                             <label for="email"> Email </label>
-                            <input type="text" id="email" name="email" placeholder="e.g. abc@gmail.com">
+                            <input type="text" id="email" name="email" value="{{user.email}}">
                         </div>
                         <div class="form__group">
                             <label for="bio"> Bio </label>
-                            <textarea id="bio" name="bio" placeholder="e.g. make my profile look good"></textarea>
+                            <textarea id="bio" name="bio" value="{{user.bio}}"></textarea>
+                        </div> {% endcomment %}
+
+                        {% for field in form %}
+                        <div class="form__group">
+                            <label> {{field.label}} </label>
+                            {{field}}
                         </div>
+                        {% endfor %}
 
                         <div class="form__action">
                             <a class="btn btn--dark" href="{% url 'profile' user.username %}">Cancel</a>
