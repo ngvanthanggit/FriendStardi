@@ -19,7 +19,15 @@ This is how you create a local version of this playform.
    ```sh
    git clone https://github.com/ngvanthanggit/FriendStardi.git
    ```
-2. Install all required packages
+2. Create Virtual Environment
+   ```sh
+   python -m venv myenv
+   ```
+   Activate the virtual environment
+   ```sh
+   source myenv/bin/activate
+   ```
+3. Install all required packages
    ```sh
    pip install -r requirements.txt
    ```
@@ -27,14 +35,15 @@ This is how you create a local version of this playform.
    ```sh
    python -m pip install -r requirements.txt
    ```
-3. Run migration(s) (if needed)
+4. Run migration(s) (if needed)
    ```sh
    python manage.py makemigrations
    ```
+   then migrate/apply the changes
    ```sh
    python manage.py migrate
    ```
-4. Run server locally
+6. Run server locally
    ```sh
    python manage.py runserver
    ```
